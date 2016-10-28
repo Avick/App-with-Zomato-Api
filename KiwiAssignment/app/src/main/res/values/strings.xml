@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">KiwiAssignment</string>
+    <string name="zomato_api_key">164550478fcd6f5fd3dab3b375634cce</string>
+    <string name="zomato_api_endpoints">https://developers.zomato.com/api/v2.1/</string>
+</resources>
