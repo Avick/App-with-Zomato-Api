@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import kiwi.castle.avick.com.kiwiassignment.Models.RealmRestaurant;
+import kiwi.castle.avick.com.kiwiassignment.Models.Restaurant;
 import kiwi.castle.avick.com.kiwiassignment.R;
 
 
@@ -21,11 +22,12 @@ public class OfflineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     ArrayList<RealmRestaurant> mDataset;
     Context mContext;
+    LongClickItemListener itemListener;
 
-
-    public OfflineAdapter(Context context, ArrayList<RealmRestaurant> dataset) {
+    public OfflineAdapter(Context context, ArrayList<RealmRestaurant> dataset, LongClickItemListener listener) {
         mContext = context;
         mDataset = dataset;
+        itemListener = listener;
     }
 
 
@@ -55,7 +57,7 @@ public class OfflineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
-    public class ViewHolderRestaurant extends RecyclerView.ViewHolder{
+    public class ViewHolderRestaurant extends RecyclerView.ViewHolder implements View.OnLongClickListener{
 
         public TextView txtRestaurant;
         public TextView txtRating;
@@ -68,7 +70,18 @@ public class OfflineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             txtPrice = (TextView) itemView.findViewById(R.id.txt_restaurant_price);
             txtRating = (TextView) itemView.findViewById(R.id.txt_restaurant_rating);
             txtCuisines = (TextView) itemView.findViewById(R.id.txt_cuisines);
+            itemView.setOnLongClickListener(this);
         }
+
+        @Override
+        public boolean onLongClick(View view) {
+            itemListener.onLongClickItem(mDataset.get(getAdapterPosition()), getAdapterPosition());
+            return true;
+        }
+    }
+
+    public interface LongClickItemListener{
+        void onLongClickItem(RealmRestaurant restaurant, int position);
     }
 
 }

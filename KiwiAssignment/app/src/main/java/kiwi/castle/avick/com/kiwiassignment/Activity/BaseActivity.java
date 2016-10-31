@@ -1,8 +1,11 @@
 package kiwi.castle.avick.com.kiwiassignment.Activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.EditText;
@@ -139,4 +142,44 @@ public class BaseActivity extends Activity {
         }
     }
 
+    public void showInstructionAlert(final String title, String message, Context context, DialogInterface.OnClickListener listener, DialogInterface.OnCancelListener cancelListener, boolean isCancellable, String positiveButtonTitle, String negButtonTittle) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+
+        // Setting Dialog Title
+        alertDialog.setTitle(title);
+        //alertDialog.setCancelable(false);
+//        if (!AppUtils.isStringDataValid(message))
+//            message = "OOps!!! Something went wrong. Please contact Ziffi support";
+
+        // Setting Dialog Message
+        alertDialog.setMessage(message);
+
+        // Setting Icon to Dialog
+        //alertDialog.setIcon(R.drawable.delete);
+
+        if (listener == null) {
+            //Setting generic button listener
+            listener = new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            };
+        }
+
+        // On pressing Settings button
+        alertDialog.setPositiveButton(positiveButtonTitle, listener);
+        alertDialog.setNegativeButton(negButtonTittle, listener);
+        if (cancelListener != null) {
+            alertDialog.setOnCancelListener(cancelListener);
+        }
+
+        alertDialog.setCancelable(isCancellable);
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
+    public void showInstructionAlert(final String title, String message, Context context, DialogInterface.OnClickListener listener, DialogInterface.OnCancelListener cancelListener) {
+        showInstructionAlert(title, message, context, listener, cancelListener, true, getString(android.R.string.ok),getString(android.R.string.no));
+    }
 }

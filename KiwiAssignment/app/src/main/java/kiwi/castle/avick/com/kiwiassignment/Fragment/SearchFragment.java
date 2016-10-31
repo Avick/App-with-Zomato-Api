@@ -1,6 +1,7 @@
 package kiwi.castle.avick.com.kiwiassignment.Fragment;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +35,7 @@ import kiwi.castle.avick.com.kiwiassignment.Models.CuisineModel;
 import kiwi.castle.avick.com.kiwiassignment.Models.ErrorVO;
 import kiwi.castle.avick.com.kiwiassignment.Models.RealmRestaurant;
 import kiwi.castle.avick.com.kiwiassignment.Models.Restaurant;
+import kiwi.castle.avick.com.kiwiassignment.Models.RestaurantModel;
 import kiwi.castle.avick.com.kiwiassignment.Models.SearchResultModel;
 import kiwi.castle.avick.com.kiwiassignment.Network.NetworkDAO;
 import kiwi.castle.avick.com.kiwiassignment.R;
@@ -90,6 +93,16 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
             showFragmentProgressBar();
             NetworkDAO.getInstance(getActivity().getString(R.string.zomato_api_endpoints), getActivity()).getCuisines(BasicUtils.getLastLocationCoordinate(getActivity())[0], BasicUtils.getLastLocationCoordinate(getActivity())[1]);
         } else if( mDataSet != null) {
+            for(int i = 0; i <  mDataSet.size(); i++) {
+                if(mDataSet.get(i) instanceof RestaurantModel) {
+                    if(checkIfExists(((RestaurantModel)mDataSet.get(i)).getRestaurant().getId())) {
+                        ((RestaurantModel)mDataSet.get(i)).getRestaurant().setSaved(true);
+                    } else {
+                        ((RestaurantModel)mDataSet.get(i)).getRestaurant().setSaved(false);
+                    }
+                }
+
+            }
             mAdapter = new SearchListAdapter(mDataSet, getActivity(),this);
             mRecyclerView.setAdapter(mAdapter);
         } else if(mDataSet == null){
@@ -142,6 +155,10 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
                 counter++;
                 if(isHasNextCuisine()){
                     mAdapter.setHasNextCuisine(true);
+                    mDataSet.add(null);
+                    //notify();
+                    mAdapter.notifyDataSetChanged();
+                    //mAdapter.notifyItemChanged(mDataSet.size());
                     getResult(counter);
                 }
             }
@@ -159,10 +176,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
                 ((BaseActivity)getActivity()).getTxtSubHeader().setVisibility(View.GONE);
                 ((BaseActivity)getActivity()).getSearchText().setVisibility(View.VISIBLE);
                 ((BaseActivity)getActivity()).getSearchText().setImeOptions(EditorInfo.IME_ACTION_SEARCH);
-                //((BaseActivity)getActivity()).getSearchText().clearFocus();
-                ((BaseActivity)getActivity()).getSearchText().setFocusable(true);
-                ((BaseActivity)getActivity()).getSearchText().requestFocus();
-                ((BaseActivity)getActivity()).getSearchText().requestFocusFromTouch();
+                ((BaseActivity)getActivity()).getSearchText().setPressed(true);
 
             }
         });
@@ -178,21 +192,23 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
                 new EditText.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        // Identifier of the action. This will be either the identifier you supplied,
-                        // or EditorInfo.IME_NULL if being called due to the enter key being pressed.
                         if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
-                            ((BaseActivity)getActivity()).setHeaderText("Search result for " + v.getText().toString());
-                            ((BaseActivity)getActivity()).getTxtHeaderView().setVisibility(View.VISIBLE);
-                            ((BaseActivity)getActivity()).getImgSearch().setVisibility(View.VISIBLE);
-                            ((BaseActivity)getActivity()).getImgMap().setVisibility(View.VISIBLE);
-                            ((BaseActivity)getActivity()).getTxtSubHeader().setVisibility(View.VISIBLE);
-                            //((BaseActivity)getActivity()).getSearchLayout().setVisibility(View.);
-                            ((BaseActivity)getActivity()).getSearchText().setVisibility(View.GONE);
-                            q = v.getText().toString();
-                            startSearch();
+
+                            if((q == null && v.getText().toString().equals("") ) || (v.getText().toString().equals(q))) {
+                                if(v.getText().toString().equals("")) {
+                                    ((BaseActivity) getActivity()).setHeaderText("Most Popular Restaurants");
+                                }
+                                customizeToolbar();
+                            } else {
+                                ((BaseActivity) getActivity()).setHeaderText("Search result for " + v.getText().toString());
+                                customizeToolbar();
+                                q = v.getText().toString();
+                                startSearch();
+                            }
+                            hideKeyBoard(v);
+
                             return true;
                         }
-                        // Return true if you have consumed the action, else false.
                         return false;
                     }
                 });
@@ -232,10 +248,11 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     }
 
     public void onEvent(ErrorVO errorVO) {
-        //hideFragmentProgressBar();
+        hideFragmentProgressBar();
         ((BaseActivity)getActivity()).dismissProgressDialog();
         if(!isCuisine) {
             counter++;
+            //showFragmentProgressBar();
             getResult(counter);
         } else {
             txtemptyState.setVisibility(View.VISIBLE);
@@ -253,11 +270,21 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
 
 
     public void updateRecylerView(SearchResultModel result) {
+
+        if(mDataSet == null) {
+            mDataSet = new ArrayList<>();
+        }
+
+        if(mDataSet.size() != 0  && mDataSet.get(mDataSet.size()-1) == null) {
+            mDataSet.remove(mDataSet.size()-1);
+            if(mAdapter != null) {
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+
         if(result != null && result.getRestaurants() != null && result.getRestaurants().size() > 0) {
 
-            if(mDataSet == null) {
-                mDataSet = new ArrayList<>();
-            }
+
 
             CuisineModel cuisine = cuisines.get(counter);
             mDataSet.add(cuisine);
@@ -347,5 +374,19 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
                 //getFragmentManager().beginTransaction().add(R.id.lnr_data_container, fragment, SearchFragment.class.getSimpleName()).addToBackStack(null).commit();
             }
         }
+    }
+
+    public void customizeToolbar(){
+        ((BaseActivity) getActivity()).getTxtHeaderView().setVisibility(View.VISIBLE);
+        ((BaseActivity) getActivity()).getImgSearch().setVisibility(View.VISIBLE);
+        ((BaseActivity) getActivity()).getImgMap().setVisibility(View.VISIBLE);
+        ((BaseActivity) getActivity()).getTxtSubHeader().setVisibility(View.VISIBLE);
+        //((BaseActivity)getActivity()).getSearchLayout().setVisibility(View.);
+        ((BaseActivity) getActivity()).getSearchText().setVisibility(View.GONE);
+    }
+
+    public void hideKeyBoard(View v) {
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 }

@@ -40,9 +40,9 @@ public class HomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(checkPermission()) {
-            //Fragment fragment = SearchFragment.newInstance();
-            //getFragmentManager().beginTransaction().add(R.id.lnr_data_container, fragment, SearchFragment.class.getSimpleName()).addToBackStack(null).commit();
-            startLocationpicker();
+            Fragment fragment = SearchFragment.newInstance();
+            getFragmentManager().beginTransaction().add(R.id.lnr_data_container, fragment, SearchFragment.class.getSimpleName()).addToBackStack(null).commit();
+            //startLocationpicker();
         }
     }
 

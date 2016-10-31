@@ -139,9 +139,11 @@ public class SearchListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         @Override
         public void onClick(View v) {
             if(v.getId() == R.id.txt_favourite) {
-                ((RestaurantModel)mDataset.get(getAdapterPosition())).getRestaurant().setSaved(true);
-                notifyItemChanged(getAdapterPosition());
-                mClickItemListener.onClickItem(((RestaurantModel)mDataset.get(getAdapterPosition())).getRestaurant());
+                if(!((RestaurantModel)mDataset.get(getAdapterPosition())).getRestaurant().isSaved()) {
+                    ((RestaurantModel) mDataset.get(getAdapterPosition())).getRestaurant().setSaved(true);
+                    notifyItemChanged(getAdapterPosition());
+                    mClickItemListener.onClickItem(((RestaurantModel) mDataset.get(getAdapterPosition())).getRestaurant());
+                }
             }
         }
     }
@@ -166,7 +168,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public interface ClickItemListener{
-        public void onClickItem(Restaurant restaurant);
+        void onClickItem(Restaurant restaurant);
     }
 
 }
