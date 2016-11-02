@@ -40,37 +40,16 @@ public class HomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(checkPermission()) {
-            Fragment fragment = SearchFragment.newInstance();
-            getFragmentManager().beginTransaction().add(R.id.lnr_data_container, fragment, SearchFragment.class.getSimpleName()).addToBackStack(null).commit();
-            //startLocationpicker();
+            if(BasicUtils.getLastLocationName(this) == null) {
+                startLocationpicker();
+            } else {
+                Fragment fragment = SearchFragment.newInstance();
+                getFragmentManager().beginTransaction().add(R.id.lnr_data_container, fragment, SearchFragment.class.getSimpleName()).addToBackStack(null).commit();
+            }//startLocationpicker();
         }
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -79,7 +58,7 @@ public class HomeActivity extends BaseActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     startLocationpicker();
                 } else {
-                    Toast.makeText(this, "app won't wok", Toast.LENGTH_SHORT);
+                    Toast.makeText(this, "app won't work", Toast.LENGTH_SHORT);
                 }
 
                 break;
@@ -131,17 +110,14 @@ public class HomeActivity extends BaseActivity {
             }
 
             if(hasLocationPermission != PackageManager.PERMISSION_GRANTED) {
-                //ActivityCompat.requestPermissions(this,new String[]{Manifest.permission_group.LOCATION},LOCATION_PERMISSION_CODE);
                 listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
             }
 
             if(hasReadPermission != PackageManager.PERMISSION_GRANTED) {
-                //ActivityCompat.requestPermissions(this,new String[]{Manifest.permission_group.LOCATION},LOCATION_PERMISSION_CODE);
                 listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
             }
 
             if(hasWritePermission != PackageManager.PERMISSION_GRANTED) {
-                //ActivityCompat.requestPermissions(this,new String[]{Manifest.permission_group.LOCATION},LOCATION_PERMISSION_CODE);
                 listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             }
 
