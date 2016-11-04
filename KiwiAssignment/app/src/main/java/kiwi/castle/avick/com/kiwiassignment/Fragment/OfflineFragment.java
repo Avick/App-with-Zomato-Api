@@ -47,8 +47,8 @@ public class OfflineFragment extends BaseFragment implements OfflineAdapter.Long
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.search_result, container, false);
+        customizeToolbar();
         init(view);
-
         return view;
     }
 
@@ -133,6 +133,13 @@ public class OfflineFragment extends BaseFragment implements OfflineAdapter.Long
             txtemptyState.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.GONE);
         }
+    }
+
+    public void customizeToolbar(){
+        ((BaseActivity)getActivity()).getImgMap().setVisibility(View.GONE);
+        ((BaseActivity)getActivity()).getImgSearch().setVisibility(View.GONE);
+        ((BaseActivity)getActivity()).getTxtHeaderView().setText(getString(R.string.favourite_text));
+        ((BaseActivity)getActivity()).getTxtSubHeader().setVisibility(View.GONE);
     }
 
 

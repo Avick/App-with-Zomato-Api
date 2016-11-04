@@ -94,20 +94,20 @@ public class HomeActivity extends BaseActivity {
 
     public boolean checkPermission() {
         if(Build.VERSION.SDK_INT >= 23) {
-            int hasInternetPermission = checkSelfPermission(Manifest.permission.INTERNET);
-            int hasNetworkStatePermission = checkSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE);
+//            int hasInternetPermission = checkSelfPermission(Manifest.permission.INTERNET);
+//            int hasNetworkStatePermission = checkSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE);
             int hasLocationPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             int hasReadPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
             int hasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             List<String> listPermissionsNeeded = new ArrayList<>();
-            if (hasInternetPermission != PackageManager.PERMISSION_GRANTED) {
-                listPermissionsNeeded.add(Manifest.permission.INTERNET);
-            }
-
-            if(hasNetworkStatePermission != PackageManager.PERMISSION_GRANTED) {
-                listPermissionsNeeded.add(Manifest.permission.ACCESS_NETWORK_STATE);
-            }
+//            if (hasInternetPermission != PackageManager.PERMISSION_GRANTED) {
+//                listPermissionsNeeded.add(Manifest.permission.INTERNET);
+//            }
+//
+//            if(hasNetworkStatePermission != PackageManager.PERMISSION_GRANTED) {
+//                listPermissionsNeeded.add(Manifest.permission.ACCESS_NETWORK_STATE);
+//            }
 
             if(hasLocationPermission != PackageManager.PERMISSION_GRANTED) {
                 listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);

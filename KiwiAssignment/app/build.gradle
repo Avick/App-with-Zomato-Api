@@ -33,5 +33,6 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
     compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.2'
     testCompile 'junit:junit:4.12'
 }

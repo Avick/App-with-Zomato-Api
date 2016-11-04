@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
 
             android:layout_marginLeft="10dp"
-            android:text="Most Popular Restaurants"
+            android:text="@string/most_popular_restaurants"
             android:textColor="@android:color/white"
             android:textSize="18dp"
             android:textStyle="bold"/>

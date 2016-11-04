@@ -5,4 +5,8 @@
     <string name="no_favourites">No Favourites</string>
     <string name="hold_item_to_remove">Hold item to remove</string>
     <string name="favourites">Favourites</string>
+    <string name="most_popular_restaurants">Most Popular Restaurants</string>
+    <string name="favourite_text">Favourite Restaurant</string>
+    <string name="search_layout_header_text">Search Result for %1$S</string>
+    <string name="sub_header_text">in %1$S</string>
 </resources>

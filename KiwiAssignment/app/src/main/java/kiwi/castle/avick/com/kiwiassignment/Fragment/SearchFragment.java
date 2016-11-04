@@ -86,7 +86,14 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     @Override
     public void onStart() {
         super.onStart();
-        ((BaseActivity)getActivity()).setSubHeaderText("in " + BasicUtils.getLastLocationName(getActivity()));
+        customizeToolbar();
+        if(q != null && !q.equals("")){
+            ((BaseActivity) getActivity()).setHeaderText(getString(R.string.search_layout_header_text,q));
+
+        }else {
+            ((BaseActivity) getActivity()).setHeaderText(getString(R.string.most_popular_restaurants));
+        }
+        ((BaseActivity)getActivity()).setSubHeaderText(getString(R.string.sub_header_text, BasicUtils.getLastLocationName(getActivity())));
         if(cuisines == null) {
             mDataSet = null;
             counter =0;
@@ -196,11 +203,13 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
 
                             if((q == null && v.getText().toString().equals("") ) || (v.getText().toString().equals(q))) {
                                 if(v.getText().toString().equals("")) {
-                                    ((BaseActivity) getActivity()).setHeaderText("Most Popular Restaurants");
+                                    ((BaseActivity) getActivity()).setHeaderText(getString(R.string.most_popular_restaurants));
+                                    //((BaseActivity) getActivity()).setHeaderText("Most Popular Restaurants");
                                 }
                                 customizeToolbar();
                             } else {
-                                ((BaseActivity) getActivity()).setHeaderText("Search result for " + v.getText().toString());
+                                ((BaseActivity) getActivity()).setHeaderText(getString(R.string.search_layout_header_text,v.getText().toString()));
+                                //((BaseActivity) getActivity()).setHeaderText("Search result for " + v.getText().toString());
                                 customizeToolbar();
                                 q = v.getText().toString();
                                 startSearch();
@@ -364,7 +373,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
                 mDataSet = null;
                 mAdapter = null;
                 counter = 0;
-                ((BaseActivity)getActivity()).setSubHeaderText("in " + BasicUtils.getLastLocationName(getActivity()));
+                ((BaseActivity)getActivity()).setSubHeaderText(getString(R.string.sub_header_text, BasicUtils.getLastLocationName(getActivity())));
                 mRecyclerView.setVisibility(View.GONE);
                 isFirsttime = true;
                 showFragmentProgressBar();
@@ -381,12 +390,14 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
         ((BaseActivity) getActivity()).getImgSearch().setVisibility(View.VISIBLE);
         ((BaseActivity) getActivity()).getImgMap().setVisibility(View.VISIBLE);
         ((BaseActivity) getActivity()).getTxtSubHeader().setVisibility(View.VISIBLE);
-        //((BaseActivity)getActivity()).getSearchLayout().setVisibility(View.);
         ((BaseActivity) getActivity()).getSearchText().setVisibility(View.GONE);
+
     }
 
     public void hideKeyBoard(View v) {
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
+
+
 }
