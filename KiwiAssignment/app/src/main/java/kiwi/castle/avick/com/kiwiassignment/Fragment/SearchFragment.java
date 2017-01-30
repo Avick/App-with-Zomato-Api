@@ -132,6 +132,11 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onClickItem(final Restaurant restaurant) {
+        //if(realm == null) {
+
+        //}
+        realm = Realm.getDefaultInstance();
+
         if(realm.isEmpty() || !checkIfExists(restaurant.getId())) {
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
@@ -146,6 +151,9 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
                 }
             });
         }
+
+        realm.close();
+
     }
 
     public void init(View view) {

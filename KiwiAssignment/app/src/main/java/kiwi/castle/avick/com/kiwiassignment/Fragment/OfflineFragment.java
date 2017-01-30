@@ -66,20 +66,14 @@ public class OfflineFragment extends BaseFragment implements OfflineAdapter.Long
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        realm = Realm.getDefaultInstance();
         updateRecylerView();
 
 
     }
 
     public void updateRecylerView() {
+        realm = Realm.getDefaultInstance();
         mDataset = new ArrayList<>();
-//        realm.executeTransaction(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//                realm.where(RealmRestaurant.class).findAll().deleteAllFromRealm();
-//            }
-//        });
 
         for (RealmRestaurant res : realm.where(RealmRestaurant.class).findAll()) {
             mDataset.add(res);
@@ -94,6 +88,8 @@ public class OfflineFragment extends BaseFragment implements OfflineAdapter.Long
             mAdapter = new OfflineAdapter(getActivity(), mDataset, this);
             mRecyclerView.setAdapter(mAdapter);
         }
+
+        realm.close();
     }
 
 
