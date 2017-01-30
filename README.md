@@ -1,7 +1,9 @@
 #### The app is to show nearby resturant using zomato api.
 
-- used
+
 -------
+used
+
 -realm for database 
 
 -retrofit for network
@@ -11,6 +13,8 @@
 -for selecting location
 
 -EventBus
+
+Functionality
 ----
 Give offline support for favorite resturants.
 
